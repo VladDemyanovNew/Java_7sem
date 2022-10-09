@@ -1,0 +1,28 @@
+<project name="Lab1" default="copy">
+    <target name="init">
+        <echo message="Building Lab1 Project"/>
+        <property name="server"
+                  value="D:\Software\apache-tomcat-9.0.67"/> <!-- D:\Software\apache-tomcat-9.0.67 | Y:\ -->
+        <property name="work"
+                  value="D:\University\7_Sem\Java_7sem\Labs\Lab1"/>
+    </target>
+
+    <target name="create" depends="init">
+        <delete dir="${server}\webapps\Lab1\"/>
+        <mkdir dir="${server}\webapps\Lab1\"/>
+        <mkdir dir="${server}\webapps\Lab1\WEB-INF"/>
+    </target>
+
+    <target name="copy" depends="create">
+        <copy file="${work}\src\WEB-INF\web.xml"
+              todir="${server}\webapps\Lab1\WEB-INF"/>
+        <copy file="${work}\src\html\index.html"
+              todir="${server}\webapps\Lab1\"/>
+        <copy file="${work}\src\html\address.html"
+              todir="${server}\webapps\Lab1\"/>
+        <copy file="${work}\src\html\education.html"
+              todir="${server}\webapps\Lab1\"/>
+        <copy file="${work}\src\images\image.jpg"
+              todir="${server}\webapps\Lab1\"/>
+    </target>
+</project>
