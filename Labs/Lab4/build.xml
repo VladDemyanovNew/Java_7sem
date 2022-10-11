@@ -1,0 +1,41 @@
+<project name="Lab2" default="copy">
+    <target name="init">
+        <echo message="Building Lab4 Project"/>
+        <property name="server"
+                  value="D:\Software\apache-tomcat-9.0.67"/> <!-- D:\Software\apache-tomcat-9.0.67 | Y:\ -->
+        <property name="work"
+                  value="D:\University\7_Sem\Java_7sem\Labs\Lab4"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <delete verbose="true">
+            <fileset dir="${work}\build"/>
+        </delete>
+        <!-- Attribute 'fork' allows to run the java-Compiler in it's own jvm -->
+        <javac  fork="yes"
+                includeantruntime="false"
+                srcdir="${work}\src"
+                destdir="${work}\build">
+            <classpath>
+                <fileset file="${server}\lib\servlet-api.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="create" depends="compile">
+        <delete dir="${server}\webapps\Lab4\"/>
+        <mkdir dir="${server}\webapps\Lab4\"/>
+        <mkdir dir="${server}\webapps\Lab4\WEB-INF"/>
+    </target>
+
+    <target name="copy" depends="create">
+        <copy file="${work}\src\WEB-INF\web.xml"
+              todir="${server}\webapps\Lab4\WEB-INF"/>
+        <copy todir="${server}\webapps\Lab4\">
+            <fileset dir="${work}\src\jsp"/>
+        </copy>
+        <copy todir="${server}\webapps\Lab4\WEB-INF\classes">
+            <fileset dir="${work}\build"/>
+        </copy>
+    </target>
+</project>
