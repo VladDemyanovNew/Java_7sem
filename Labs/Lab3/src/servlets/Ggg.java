@@ -35,6 +35,9 @@ public class Ggg extends HttpServlet implements Servlet {
             case "/Ggg/doubleForward":
                 this.handleGetDoubleForward(request, response);
                 break;
+            case "/Ggg/doubleRedirect":
+                this.handleGetDoubleRedirect(request, response);
+                break;
             case "/Ggg/httpClientResponse":
                 this.handleHttpClient(request, response);
                 break;
@@ -61,6 +64,14 @@ public class Ggg extends HttpServlet implements Servlet {
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/test.html");
         requestDispatcher.forward(request, response);
+    }
+
+    private void handleGetDoubleRedirect(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        System.out.println("Ggg:doGet:redirect:html");
+
+        String path = request.getContextPath() + "/test.html";
+        response.sendRedirect(path);
     }
 
     private void handleGetForward(HttpServletRequest request, HttpServletResponse response)

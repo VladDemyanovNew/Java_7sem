@@ -33,6 +33,7 @@
         <servlet-name>Ggg</servlet-name>
         <url-pattern>/Ggg</url-pattern>
         <url-pattern>/Ggg/doubleForward</url-pattern>
+        <url-pattern>/Ggg/doubleRedirect</url-pattern>
         <url-pattern>/Ggg/httpClientResponse</url-pattern>
     </servlet-mapping>
 

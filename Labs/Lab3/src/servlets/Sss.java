@@ -49,7 +49,7 @@ public class Sss extends HttpServlet implements Servlet {
                 this.doGetHtmlForward(request, response);
                 break;
             case "/Sss/doubleForward":
-                this.doGetDoubleForward(request,response);
+                this.doGetDoubleForward(request, response);
                 break;
             case "/Sss/servletForward":
                 this.doGetServletForward(request, response);
@@ -138,7 +138,7 @@ public class Sss extends HttpServlet implements Servlet {
             throws ServletException, IOException {
         System.out.println("Sss:doGet:doubleRedirect");
 
-        String path = request.getContextPath() + "/Ggg/doubleForward";
+        String path = request.getContextPath() + "/Ggg/doubleRedirect";
         response.sendRedirect(path);
     }
 

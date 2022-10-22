@@ -18,6 +18,9 @@
                 destdir="${work}\build">
             <classpath>
                 <fileset file="${server}\lib\servlet-api.jar"/>
+                <fileset file="${server}\lib\commons-httpclient-3.1.jar"/>
+                <fileset file="${server}\lib\commons-codec-1.15.jar"/>
+                <fileset file="${server}\lib\commons-logging-1.2.jar"/>
             </classpath>
         </javac>
     </target>

@@ -1,6 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.time.*" %>
 <%@ page import="java.time.format.*" %>
 <%@ page import="enums.* "%>
@@ -19,12 +17,14 @@
 </head>
 <body>
     <h1>Lab4</h1>
+    <!-- JSP Expression -->
     <h2>Good <%= DateHelper.getDayPart().getString() %></h2>
 
     <hr>
 
     <table>
         <tr><th>Date</th><th>Week's number</th></tr>
+        <!-- JSP Scriplet -->
         <%
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate currentDate = LocalDate.now();
@@ -44,6 +44,7 @@
         <button type="submit">Press</button>
     </form>
 
+    <!-- JSP Declaration -->
     <%! Boolean isPress, isForward; String queryString = null; %>
     <%
         queryString = request.getQueryString();
@@ -56,6 +57,7 @@
     <% } %>
 
     <% if (isPress && DateHelper.getDayPart() == DayPart.AFTERNOON) { %>
+    <!-- JSP Directives -->
     <%@ include file="afternoon.jsp" %>
     <% } %>
 
@@ -84,6 +86,14 @@
     <% if (isForward) { %>
     <jsp:forward page="night.jsp" />
     <% } %>
+
+    <hr>
+    Forward:Jjj:Get:
+    <a href="Jjj">Jjj:get</a><br>
+    Forward:Jjj:Post:
+    <form action="Jjj" method="POST">
+        <button type="submit">Jjj:post</button>
+    </form>
 
 </body>
 </html>
