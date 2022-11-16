@@ -1,0 +1,42 @@
+<project name="Lab8" default="copy">
+    <target name="init">
+        <echo message="Building Lab8 Project"/>
+        <property name="server"
+                  value="D:\Software\apache-tomcat-9.0.67"/> <!-- D:\Software\apache-tomcat-9.0.67 | Y:\ -->
+        <property name="work"
+                  value="D:\University\7_Sem\Java_7sem\Labs\Lab8"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <delete verbose="true">
+            <fileset dir="${work}\build"/>
+        </delete>
+        <!-- Attribute 'fork' allows to run the java-Compiler in it's own jvm -->
+        <javac  fork="yes"
+                includeantruntime="false"
+                srcdir="${work}\src"
+                destdir="${work}\build">
+            <classpath>
+                <fileset file="${server}\lib\servlet-api.jar"/>
+                <fileset file="${server}\lib\commons-httpclient-3.1.jar"/>
+                <fileset file="${server}\lib\commons-codec-1.15.jar"/>
+                <fileset file="${server}\lib\commons-logging-1.2.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="create" depends="compile">
+        <delete dir="${server}\webapps\Lab8\"/>
+        <mkdir dir="${server}\webapps\Lab8\"/>
+        <mkdir dir="${server}\webapps\Lab8\WEB-INF"/>
+    </target>
+
+    <target name="copy" depends="create">
+        <copy todir="${server}\webapps\Lab8\WEB-INF">
+            <fileset dir="${work}\src\WEB-INF\" />
+        </copy>
+        <copy todir="${server}\webapps\Lab8\WEB-INF\classes">
+            <fileset dir="${work}\build"/>
+        </copy>
+    </target>
+</project>
