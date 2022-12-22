@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab11</title>
+    <script type="text/javascript" src="http-request-factory.js"></script>
+    <script type="text/javascript" src="parsers.js"></script>
+</head>
+<body>
+    <form>
+        x: <input type="number" id="x"><br>
+        y: <input type="number" id="y"><br>
+        z: <input type="number" id="z" value="0" readonly><br>
+
+        <hr>
+
+        n: <input type="number" id="xmlExtremum"><br>
+        Parsed XML:<br>
+        <textarea id="xmlResult" readonly></textarea><br>
+
+        <hr>
+
+        n: <input type="number" id="jsonExtremum"><br>
+        Parsed JSON:<br>
+        <textarea id="jsonResult" readonly></textarea><br>
+
+        <hr>
+        <input type="checkbox" id="isAsync">
+
+        <button type="button" onclick="onSendBtnClick()">
+            Send
+        </button>
+    </form>
+
+    <script type="text/javascript">
+        const zInputTag = document.getElementById('z');
+        const xmlResultTag = document.getElementById('xmlResult');
+        const jsonResultTag = document.getElementById('jsonResult');
+        let isAsync = true;
+
+        function send_Header(x, y) {
+            const request = createRequest();
+            if (!request) {
+                return;
+            }
+
+            request.open('POST', 'Sss_Header', isAsync);
+            request.onreadystatechange = () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+
+                if (request.status === 200) {
+                    console.log(request.getResponseHeader('Value-Z'));
+                    zInputTag.value = request.getResponseHeader('Value-Z');
+                    return;
+                }
+
+                alert('status = ' + request.status + '\n' + request.statusText);
+            };
+
+            request.setRequestHeader('Value-X', x);
+            request.setRequestHeader('Value-Y', y);
+            request.send();
+        }
+
+        function send_XML(extremum) {
+            const request = createRequest();
+            if (!request) {
+                return;
+            }
+
+            request.open('POST', 'Sss_XML', isAsync);
+            request.onreadystatechange = () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+
+                if (request.status === 200) {
+                    console.log(request.responseXML);
+                    xmlResultTag.value = parseXML(request.responseXML);
+                    return;
+                }
+
+                alert('status = ' + request.status + '\n' + request.statusText);
+            };
+
+            request.setRequestHeader('XRand-N', extremum);
+            request.send();
+        }
+
+        function send_JSON(extremum) {
+            const request = createRequest();
+            if (!request) {
+                return;
+            }
+
+            request.open('POST', 'Sss_JSON', isAsync);
+            request.onreadystatechange = () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+
+                if (request.status === 200) {
+                    console.log(request.responseText);
+                    jsonResultTag.value = parseJSON(request.responseText);
+                    return;
+                }
+
+                alert('status = ' + request.status + '\n' + request.statusText);
+            };
+
+            request.setRequestHeader('XRand-N', extremum);
+            request.send();
+        }
+
+        function onSendBtnClick() {
+            const x = document.getElementById('x').value;
+            const y = document.getElementById('y').value;
+            const xmlExtremum = document.getElementById('xmlExtremum').value;
+            const jsonExtremum = document.getElementById('jsonExtremum').value;
+            isAsync = document.getElementById('isAsync').checked;
+
+            send_Header(x, y);
+            send_XML(xmlExtremum);
+            send_JSON(jsonExtremum);
+        }
+    </script>
+</body>
+</html>
