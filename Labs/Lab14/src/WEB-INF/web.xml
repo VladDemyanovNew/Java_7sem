@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+    <display-name>Lab13</display-name>
+
+    <context-param>
+        <param-name>SmtpHost</param-name>
+        <param-value>smtp-mail.outlook.com</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>ImapHost</param-name>
+        <param-value>outlook.office365.com</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>SmtpPort</param-name>
+        <param-value>587</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>ImapPort</param-name>
+        <param-value>993</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>SmtpAuth</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>SystemEmailAddress</param-name>
+        <param-value>system.wms@outlook.com</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>SystemEmailPassword</param-name>
+        <param-value>5w*x6YQ8nh0W</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>MailServlet</servlet-name>
+        <servlet-class>MailServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>MailServlet</servlet-name>
+        <url-pattern>/MailServlet</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>MailForm.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>
