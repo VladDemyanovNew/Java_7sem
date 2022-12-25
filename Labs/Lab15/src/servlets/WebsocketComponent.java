@@ -1,19 +1,19 @@
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.RemoteEndpoint;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-//аннотации заявляет, что класс является веб-сокет, который будет развернут и доступен в URI пространства сервера веб-сокетов;
-@ServerEndpoint("/websock")
-public class websock extends Endpoint { //Класс Endpoint держит методы жизненного цикла , которые могут быть переопределены , чтобы перехватить WebSocket
+@ServerEndpoint("/ws")
+public class WebsocketComponent extends Endpoint {
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig){
-        RemoteEndpoint.Basic remoteEndpointBasic = session.getBasicRemote(); // для синхронной отправки
+        RemoteEndpoint.Basic remoteEndpointBasic = session.getBasicRemote();
         SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
         try{
             while(true){
