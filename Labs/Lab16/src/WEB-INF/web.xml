@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+    <display-name>Lab16</display-name>
+
+    <env-entry>
+        <env-entry-name>UWSRConnectionString</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>jdbc:sqlserver://VDemyanov:1433;databaseName=UWSR;user=VDemyanov;password=admin;</env-entry-value>
+    </env-entry>
+
+    <servlet-mapping>
+        <servlet-name>ReferencesServlet</servlet-name>
+        <url-pattern>/ReferencesServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReferencesServlet</servlet-name>
+        <servlet-class>ReferencesServlet</servlet-class>
+    </servlet>
+
+    <welcome-file-list>
+        <welcome-file>references.html</welcome-file>
+    </welcome-file-list>
+</web-app>

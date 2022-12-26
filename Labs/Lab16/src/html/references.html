@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>References</title>
+    <style type="text/css">
+        button {
+            cursor: pointer;
+        }
+
+        .ml {
+            margin-left: 0.2rem;
+        }
+
+        .reference {
+            padding: 0.5rem;
+            border: solid 1px black;
+            margin-bottom: 0.1rem;
+        }
+
+        .toolbar {
+            padding: 0.5rem;
+            margin-bottom: 0.1rem;
+        }
+
+        .insert-container {
+            padding: 0.5rem;
+            border: solid 1px black;
+            margin-bottom: 0.1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>UWSR</h1>
+
+    <div id="toolbar" class="toolbar">
+        <button onclick="onInsertBtnClick()">insert</button>
+        <button>filter</button>
+    </div>
+
+    <div class="insert-container" id="insert-container" hidden>
+        <input type="text" id="insertUrl" placeholder="https://url-useful-website-reference"><br>
+        <input type="text" id="insertDescription" placeholder="key-word, key-word..."><br>
+        <button onclick="submitInserting()">OK</button>
+        <button onclick="cancelInserting()">Cancel</button>
+    </div>
+
+    <div id="references-container">
+
+    </div>
+
+    <script type="text/javascript">
+        const referencesContainer = document.getElementById('references-container');
+        const insertContainer = document.getElementById('insert-container');
+        const insertUrlTag = document.getElementById('insertUrl');
+        const insertDescriptionTag = document.getElementById('insertDescription');
+
+        async function loadReferences() {
+            const response = await fetch('ReferencesServlet');
+            const references = await response.json();
+
+            referencesContainer.innerHTML = references
+                .sort((x, y) => y.Id - x.Id)
+                .map(x => createReferenceView(x)).join('');
+        }
+
+        function createReferenceView(reference) {
+            return "<div class='reference'><button class='ml'>delete</button><button class='ml'>update</button>" +
+                `<button class='ml'>+${reference.Plus}</button><button class='ml'>-${reference.Minus}</button>` +
+                "<button class='ml'>comments</button>" +
+                `<span class='ml'>[${reference.Id}]</span><a class='ml' href='${reference.Url}'>${reference.Description}</a></div>`;
+        }
+
+        function onInsertBtnClick() {
+            insertContainer.hidden = false;
+        }
+
+        function cancelInserting() {
+            insertContainer.hidden = true;
+        }
+
+        async function submitInserting() {
+            const referenceCreateData = {
+                Id: 0,
+                Url: insertUrlTag.value,
+                Description: insertDescriptionTag.value,
+                Minus: 0,
+                Plus: 0,
+            };
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(referenceCreateData),
+            };
+            const response = await fetch('ReferencesServlet', options);
+            const reference = await response.json();
+
+            const referenceItem = createReferenceView(reference);
+            referencesContainer.insertAdjacentHTML('beforebegin', referenceItem);
+
+            cancelInserting();
+        }
+
+        loadReferences();
+    </script>
+</body>
+</html>

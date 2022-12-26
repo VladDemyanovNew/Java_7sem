@@ -1,0 +1,46 @@
+<project name="Lab16" default="copy">
+    <target name="init">
+        <echo message="Building Lab16 Project"/>
+        <property name="server"
+                  value="D:\Software\apache-tomcat-9.0.67"/> <!-- D:\Software\apache-tomcat-9.0.67 | Y:\ -->
+        <property name="work"
+                  value="D:\University\7_Sem\Java_7sem\Labs\Lab16"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <delete verbose="true">
+            <fileset dir="${work}\build"/>
+        </delete>
+        <!-- Attribute 'fork' allows to run the java-Compiler in it's own jvm -->
+        <javac  fork="yes"
+                includeantruntime="false"
+                srcdir="${work}\src"
+                destdir="${work}\build">
+            <classpath>
+                <fileset file="${server}\lib\servlet-api.jar"/>
+                <fileset file="${server}\lib\sqljdbc42.jar"/>
+                <fileset file="${server}\lib\jsp-api.jar"/>
+                <fileset file="${server}\lib\gson-2.8.2.jar"/>
+                <fileset file="${server}\lib\commons-io-2.11.0.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="create" depends="compile">
+        <delete dir="${server}\webapps\Lab16\"/>
+        <mkdir dir="${server}\webapps\Lab16\"/>
+        <mkdir dir="${server}\webapps\Lab16\WEB-INF"/>
+    </target>
+
+    <target name="copy" depends="create">
+        <copy todir="${server}\webapps\Lab16\WEB-INF">
+            <fileset dir="${work}\src\WEB-INF\" />
+        </copy>
+        <copy todir="${server}\webapps\Lab16\">
+            <fileset dir="${work}/src/html"/>
+        </copy>
+        <copy todir="${server}\webapps\Lab16\WEB-INF\classes">
+            <fileset dir="${work}\build"/>
+        </copy>
+    </target>
+</project>
