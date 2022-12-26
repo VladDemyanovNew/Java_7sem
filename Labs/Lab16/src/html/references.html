@@ -15,7 +15,7 @@
             margin-left: 0.2rem;
         }
 
-        .reference {
+        .container {
             padding: 0.5rem;
             border: solid 1px black;
             margin-bottom: 0.1rem;
@@ -23,12 +23,6 @@
 
         .toolbar {
             padding: 0.5rem;
-            margin-bottom: 0.1rem;
-        }
-
-        .insert-container {
-            padding: 0.5rem;
-            border: solid 1px black;
             margin-bottom: 0.1rem;
         }
     </style>
@@ -41,11 +35,11 @@
         <button>filter</button>
     </div>
 
-    <div class="insert-container" id="insert-container" hidden>
+    <div class="container" id="insert-container" hidden>
         <input type="text" id="insertUrl" placeholder="https://url-useful-website-reference"><br>
         <input type="text" id="insertDescription" placeholder="key-word, key-word..."><br>
         <button onclick="submitInserting()">OK</button>
-        <button onclick="cancelInserting()">Cancel</button>
+        <button onclick="closeInsertingReference()">Cancel</button>
     </div>
 
     <div id="references-container">
@@ -53,6 +47,8 @@
     </div>
 
     <script type="text/javascript">
+        let referencesSource = [];
+
         const referencesContainer = document.getElementById('references-container');
         const insertContainer = document.getElementById('insert-container');
         const insertUrlTag = document.getElementById('insertUrl');
@@ -62,24 +58,40 @@
             const response = await fetch('ReferencesServlet');
             const references = await response.json();
 
-            referencesContainer.innerHTML = references
+            referencesSource = references.sort((x, y) => y.Id - x.Id);
+
+            referencesContainer.innerHTML = referencesSource
                 .sort((x, y) => y.Id - x.Id)
                 .map(x => createReferenceView(x)).join('');
         }
 
         function createReferenceView(reference) {
-            return "<div class='reference'><button class='ml'>delete</button><button class='ml'>update</button>" +
+            const deleteInfoContainer = `<div id="delete-info-container-${reference.Id}" class="container" hidden><span>${reference.Id} ${reference.Description}</span><br>` +
+                `<button onclick="submitDeletingReference(${reference.Id})">OK</button><button onclick="closeDeletingReference(${reference.Id})">Cancel</button></div>`;
+
+            const updateInfoContainer = `<div id="update-info-container-${reference.Id}" class="container" hidden><input type="text" id="updateUrl${reference.Id}" value="${reference.Url}"><br>` +
+                `<input type="text" id="updateDescription${reference.Id}" value="${reference.Description}"><br>` +
+                `<button onclick="submitUpdatingReference(${reference.Id})">OK</button><button onclick="closeUpdatingReference(${reference.Id})">Cancel</button></div>`;
+
+            return `<div class='container'><button class='ml' onclick='onDeleteReferenceBtnClick(${reference.Id})'>delete</button><button class='ml' onclick='onUpdateReferenceBtnClick(${reference.Id})'>update</button>` +
                 `<button class='ml'>+${reference.Plus}</button><button class='ml'>-${reference.Minus}</button>` +
                 "<button class='ml'>comments</button>" +
-                `<span class='ml'>[${reference.Id}]</span><a class='ml' href='${reference.Url}'>${reference.Description}</a></div>`;
+                `<span class='ml'>[${reference.Id}]</span><a class='ml' href='${reference.Url}'>${reference.Description}</a>` +
+                `${deleteInfoContainer}${updateInfoContainer}</div>`;
         }
 
         function onInsertBtnClick() {
             insertContainer.hidden = false;
         }
 
-        function cancelInserting() {
+        function closeInsertingReference() {
             insertContainer.hidden = true;
+        }
+
+        function rebuildReferences() {
+            referencesContainer.innerHTML = referencesSource
+                .sort((x, y) => y.Id - x.Id)
+                .map(x => createReferenceView(x)).join('');
         }
 
         async function submitInserting() {
@@ -101,10 +113,65 @@
             const response = await fetch('ReferencesServlet', options);
             const reference = await response.json();
 
-            const referenceItem = createReferenceView(reference);
-            referencesContainer.insertAdjacentHTML('beforebegin', referenceItem);
+            referencesSource.unshift(reference);
+            rebuildReferences();
 
-            cancelInserting();
+            closeInsertingReference();
+        }
+
+        async function submitDeletingReference(id) {
+            const response = await fetch(`ReferencesServlet?id=${id}`, { method: 'DELETE' });
+            if (response.ok) {
+                const referenceIndex = referencesSource.findIndex(x => x.Id === id);
+                referencesSource.splice(referenceIndex, 1);
+                rebuildReferences();
+            }
+        }
+
+        function closeDeletingReference(id) {
+            document.getElementById(`delete-info-container-${id}`).hidden = true;
+        }
+
+        function onDeleteReferenceBtnClick(id) {
+            document.getElementById(`delete-info-container-${id}`).hidden = false;
+        }
+
+        async function submitUpdatingReference(id) {
+            const updatedUrl = document.getElementById(`updateUrl${id}`).value;
+            const updatedDescription = document.getElementById(`updateDescription${id}`).value;
+
+            const reference = referencesSource.find(x => x.Id === id);
+            const referenceUpdateData = {
+                Id: id,
+                Url: updatedUrl,
+                Description: updatedDescription,
+                Minus: reference.Minus,
+                Plus: reference.Plus,
+            };
+
+            const options = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(referenceUpdateData),
+            };
+            const response = await fetch(`ReferencesServlet?id=${id}`, options);
+            if (response.ok) {
+                const referenceIndex = referencesSource.findIndex(x => x.Id === id);
+
+                referencesSource.splice(referenceIndex, 1, referenceUpdateData);
+                rebuildReferences();
+                closeUpdatingReference(id);
+            }
+        }
+
+        function closeUpdatingReference(id) {
+            document.getElementById(`update-info-container-${id}`).hidden = true;
+        }
+
+        function onUpdateReferenceBtnClick(id) {
+            document.getElementById(`update-info-container-${id}`).hidden = false;
         }
 
         loadReferences();

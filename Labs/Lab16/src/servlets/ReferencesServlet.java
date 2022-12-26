@@ -51,8 +51,6 @@ public class ReferencesServlet extends HttpServlet implements Servlet {
             throws ServletException, IOException {
         response.setContentType("application/json");
 
-        System.out.println("Dopost");
-
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();
@@ -61,10 +59,29 @@ public class ReferencesServlet extends HttpServlet implements Servlet {
         Reference referenceCreateData = gson.fromJson(jsonString, Reference.class);
 
         Reference reference = this.referenceService.create(referenceCreateData);
-        System.out.println(reference.getId());
 
         PrintWriter out = response.getWriter();
         out.print(gson.toJson(reference));
         out.flush();
+    }
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        this.referenceService.delete(id);
+    }
+
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
+
+        String jsonString = IOUtils.toString(request.getInputStream());
+        Reference referenceUpdateData = gson.fromJson(jsonString, Reference.class);
+
+        this.referenceService.update(id, referenceUpdateData);
     }
 }

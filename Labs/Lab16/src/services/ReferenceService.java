@@ -67,9 +67,41 @@ public class ReferenceService {
         }
     }
 
-    public void Update(int id, Reference referenceUpdateData) {
+    public void update(int id, Reference referenceUpdateData) {
+        String query = "UPDATE [References] SET [Url] = ?, [Description] = ? WHERE Id = ?";
+
+        try (Connection connection = SqlConnectionFactory.createConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, referenceUpdateData.getUrl());
+            statement.setString(2, referenceUpdateData.getDescription());
+            statement.setInt(3, id);
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Updating reference failed, no rows affected.");
+            }
+        }
+        catch (SQLException error) {
+            error.printStackTrace();
+        }
     }
 
-    public void Delete(int id) {
+    public void delete(int id) {
+        String query = "DELETE [References] WHERE Id = ?";
+
+        try (Connection connection = SqlConnectionFactory.createConnection();
+             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setInt(1, id);
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Deleting reference failed, no rows affected.");
+            }
+        }
+        catch (SQLException error) {
+            error.printStackTrace();
+        }
     }
 }
