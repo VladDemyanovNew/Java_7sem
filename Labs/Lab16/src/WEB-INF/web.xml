@@ -21,7 +21,17 @@
         <servlet-class>ReferencesServlet</servlet-class>
     </servlet>
 
+    <servlet-mapping>
+        <servlet-name>CommentsServlet</servlet-name>
+        <url-pattern>/CommentsServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CommentsServlet</servlet-name>
+        <servlet-class>CommentsServlet</servlet-class>
+    </servlet>
+
     <welcome-file-list>
-        <welcome-file>references.html</welcome-file>
+        <welcome-file>references.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

@@ -37,7 +37,8 @@
             <fileset dir="${work}\src\WEB-INF\" />
         </copy>
         <copy todir="${server}\webapps\Lab16\">
-            <fileset dir="${work}/src/html"/>
+            <fileset dir="${work}\src\jsp"/>
+            <fileset dir="${work}\src\js"/>
         </copy>
         <copy todir="${server}\webapps\Lab16\WEB-INF\classes">
             <fileset dir="${work}\build"/>
