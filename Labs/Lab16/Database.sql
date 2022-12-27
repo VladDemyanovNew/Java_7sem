@@ -27,3 +27,6 @@ CREATE TABLE Comments
 
 INSERT INTO [References] ([Url], [Description], Minus, Plus)
 VALUES('test', 'test', 1, 1);
+
+ALTER TABLE Comments 
+ALTER COLUMN SessionId NVARCHAR(4000)

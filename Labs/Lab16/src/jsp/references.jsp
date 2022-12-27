@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    Session Id: <input type="text" value="<%= session.getId() %>" id="sessionId" readonly="true">
+    Session Id: <input type="text" value="<%= session.getId() %>" id="sessionId" readonly>
     <h1>UWSR</h1>
 
     <div>
